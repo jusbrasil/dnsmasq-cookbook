@@ -14,3 +14,8 @@ template '/etc/dnsmasq.d/dns.conf' do
   )
   notifies :restart, resources(:service => 'dnsmasq'), :immediately
 end
+
+bash "Edit /etc/resolv.conf" do
+  code %( sed -i '/nameserver/ i\\nameserver 127.0.0.1' /etc/resolv.conf )
+  not_if "grep 'nameserver 127.0.0.1' /etc/resolv.conf"
+end
